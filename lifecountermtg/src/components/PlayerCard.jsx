@@ -7,20 +7,21 @@ export default function PlayerCard({
   decrease,
   addCommanderDamage,
   allPlayers,
+  updateName,
 }) {
   const otherPlayers = (allPlayers || []).filter((p) => p.id !== player.id);
   const [sourceId, setSourceId] = useState(otherPlayers[0]?.id ?? "");
 
   return (
     <motion.div
-      whileTap={{ scale: 0.98 }}
+      // whileTap={{ scale: 0.98 }}
       className="bg-zinc-900 rounded-3xl p-6 border border-zinc-700"
     >
       <div className="flex flex-col items-center gap-6">
         <input
           value={player.name}
           className="bg-zinc-800 text-center text-2xl rounded-xl p-2"
-          readOnly
+          onChange={(e) => updateName(e.target.value)}
         />
       </div>
 

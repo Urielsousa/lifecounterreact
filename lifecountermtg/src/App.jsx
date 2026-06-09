@@ -41,6 +41,12 @@ export default function App() {
     );
   };
 
+  const updateName = (id, newName) => {
+    setPlayer((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, name: newName } : p)),
+    );
+  };
+
   const addCommanderDamage = (targetId, sourceId, amount) => {
     setPlayer((prev) => {
       const sourceName =
@@ -121,6 +127,7 @@ export default function App() {
             allPlayers={player}
             increase={() => updateLife(p.id, 1)}
             decrease={() => updateLife(p.id, -1)}
+            updateName={(name) => updateName(p.id, name)}
             addCommanderDamage={addCommanderDamage}
           />
         ))}
