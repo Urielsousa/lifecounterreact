@@ -12,6 +12,7 @@ export default function App() {
       id: index,
       name: `player ${index + 1}`,
       life: initialLife,
+      CommanderDamage: {},
     }));
 
     setPlayer(newPlayer);
@@ -38,6 +39,38 @@ export default function App() {
         return player;
       }),
     );
+  };
+
+  const addCommanderDamage = (targetId, sourceId, amount) => {
+    setPlayer((prev) => {
+      const sourceName =
+        prev.find((p) => p.id === sourceId)?.name || `player ${sourceId}`;
+
+      const newPlayers = prev.map((p) => {
+        if (p.id === targetId) {
+          const currentDamage = p.CommanderDamage[sourceId] || 0;
+
+          return {
+            ...p,
+            CommanderDamage: {
+              ...p.CommanderDamage,
+              [sourceId]: currentDamage + amount,
+            },
+          };
+        }
+
+        return p;
+      });
+
+      const targetName =
+        newPlayers.find((p) => p.id === targetId)?.name || `player ${targetId}`;
+      setHistory((old) => [
+        `${targetName} recebeu ${amount} de Commander Damage de ${sourceName}`,
+        ...old,
+      ]);
+
+      return newPlayers;
+    });
   };
 
   const resetGame = () => {
@@ -81,12 +114,14 @@ export default function App() {
       </div>
 
       <div className="grid md:grid-cols-2 gap-6">
-        {player.map((player) => (
+        {player.map((p) => (
           <PlayerCard
-            key={player.id}
-            player={player}
-            increase={() => updateLife(player.id, 1)}
-            decrease={() => updateLife(player.id, -1)}
+            key={p.id}
+            player={p}
+            allPlayers={player}
+            increase={() => updateLife(p.id, 1)}
+            decrease={() => updateLife(p.id, -1)}
+            addCommanderDamage={addCommanderDamage}
           />
         ))}
       </div>
