@@ -3,11 +3,12 @@ import { useState } from "react";
 
 export default function PlayerCard({
   player,
-  increase,
-  decrease,
-  addCommanderDamage,
-  allPlayers,
-  updateName,
+allPlayers,
+increase,
+decrease,
+updateName,
+addCommanderDamage= {addCommanderDamage},
+changeCommanderDamage={changeCommanderDamage}
 }) {
   const otherPlayers = (allPlayers || []).filter((p) => p.id !== player.id);
   const [sourceId, setSourceId] = useState(otherPlayers[0]?.id ?? "");
@@ -84,8 +85,31 @@ export default function PlayerCard({
                 (allPlayers || []).find((p) => p.id === parseInt(sid, 10))
                   ?.name || `player ${sid}`;
               return (
-                <li key={sid}>
-                  {name}: {val}
+                <li
+                  key={sid}
+                  className="flex items-center justify-between gap-3 mb-2"
+                >
+                  <span>{name}</span>
+                  <div className="flex items-center gap-2">
+                    <button
+                      className="bg-red-600 px-2 rounded"
+                      onClick={() =>
+                        changeCommanderDamage(player.id, parseInt(sid, 10), -1)
+                      }
+                    >
+                      -
+                    </button>
+                    <span className="font-bold">{val}</span>
+
+                    <button
+                      className="bg-green-600 px-2 rounded"
+                      onClick={() =>
+                        changeCommanderDamage(player.id, parseInt(sid, 10), 1)
+                      }
+                    >
+                      +
+                    </button>
+                  </div>
                 </li>
               );
             })}

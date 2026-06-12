@@ -2,6 +2,7 @@ import { useState } from "react";
 import PlayerCard from "./components/PlayerCard";
 import DamageHistory from "./components/DamageHistory";
 
+//guarda todos os jogadores
 export default function App() {
   const [player, setPlayer] = useState([]);
   const [history, setHistory] = useState([]);
@@ -79,6 +80,24 @@ export default function App() {
     });
   };
 
+  const changeCommanderDamage = (targetId, sourceId, amount) => {
+    setPlayer((prev) =>
+      prev.map((P) => {
+        if (P.id !== targetId) return P;
+
+        const currentDamage = P.CommanderDamage[sourceId] || 0;
+
+        return {
+          ...P,
+          CommanderDamage: {
+            ...P.CommanderDamage,
+            [sourceId]: Math.max(0, currentDamage + amount),
+          },
+        };
+      }),
+    );
+  };
+
   const resetGame = () => {
     setStarted(false);
     setPlayer([]);
@@ -129,6 +148,7 @@ export default function App() {
             decrease={() => updateLife(p.id, -1)}
             updateName={(name) => updateName(p.id, name)}
             addCommanderDamage={addCommanderDamage}
+            changeCommanderDamage={changeCommanderDamage}
           />
         ))}
       </div>
